@@ -3,6 +3,15 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
 
+plt.rcParams.update({
+    "figure.facecolor": "#0E1117",
+    "axes.facecolor": "#0E1117",
+    "text.color": "white",
+    "axes.labelcolor": "white",
+    "xtick.color": "white",
+    "ytick.color": "white"
+})
+
 # CONFIGURACION VISUAL DE STREAMLIT
 st.set_page_config(
     page_title="Ventas de iPhone 2025",
@@ -58,6 +67,9 @@ df['Sale_Date'] = pd.to_datetime(df['Sale_Date']) # Corrección: Se cambió 'Dat
 ventas_tiempo = df.groupby(
     df['Sale_Date'].dt.to_period('M')
 )['Quantity'].sum().reset_index() #Agrupa por mes y suma la cantidad de ventas
+
+ventas_pais = df.groupby('Country')['Quantity'].sum().reset_index()
+ventas_pais = ventas_pais.sort_values('Quantity', ascending=False)
 
 
 # GRAFICA DE BARRAS (MATPLOTLIB)
@@ -120,7 +132,7 @@ st.header("Visualización con Seaborn")
 
 plt.figure()
 
-sns.set_theme(style="white")
+sns.set_theme(style="darkgrid", rc={"axes.facecolor": "#0E1117", "figure.facecolor": "#0E1117", "text.color": "white", "axes.labelcolor": "white", "xtick.color": "white", "ytick.color": "white"})
 
 sns.barplot(
     x='iPhone_Model',
@@ -174,13 +186,13 @@ plt.close()
 # GRAFICA DE LINEAS (SEABORN)
 plt.figure()
 
-sns.set_theme(style="white")
+sns.set_theme(style="darkgrid", rc={"axes.facecolor": "#0E1117", "figure.facecolor": "#0E1117", "text.color": "white", "axes.labelcolor": "white", "xtick.color": "white", "ytick.color": "white"})
 
 sns.lineplot(
     x=ventas_tiempo['Sale_Date'].astype(str),
     y=ventas_tiempo['Quantity'],
     marker='o', #Sirve para marcar los puntos de datos en la línea
-    color='#043556'
+    color='#FEE9E4'
 )
 
 plt.title(
@@ -189,6 +201,31 @@ plt.title(
 )
 
 plt.xlabel('Mes')
+plt.ylabel('Cantidad Vendida')
+
+plt.xticks(rotation=45)
+
+st.pyplot(plt)
+
+plt.close()
+
+
+# GRAFICA DE BARRAS POR PAÍS (AGREGADA)
+st.header("Ventas por País")
+
+plt.figure(figsize=(10, 6))
+
+sns.set_theme(style="darkgrid", rc={"axes.facecolor": "#0E1117", "figure.facecolor": "#0E1117", "text.color": "white", "axes.labelcolor": "white", "xtick.color": "white", "ytick.color": "white"})
+
+sns.barplot(
+    x='Country',
+    y='Quantity',
+    data=ventas_pais,
+    palette=colores
+)
+
+plt.title('Ventas Totales de iPhone por País')
+plt.xlabel('País')
 plt.ylabel('Cantidad Vendida')
 
 plt.xticks(rotation=45)
