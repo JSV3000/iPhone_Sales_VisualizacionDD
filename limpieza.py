@@ -12,7 +12,6 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    /* Forzar fondo oscuro y texto claro similar al tema de la imagen */
     .stApp {
         background-color: #0E1117;
         color: #FAFAFA;
